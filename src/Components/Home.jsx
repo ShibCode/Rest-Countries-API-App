@@ -14,6 +14,7 @@ const ITEMS_PER_PAGE = 12;
 
 const Home = ({ allCountries }) => {
   const [filteredCountries, setFilteredCountries] = useState([]);
+
   const [searchInput, setSearchInput] = useState("");
 
   const [dropDownActive, setDropDownActive] = useState(false);
@@ -121,10 +122,10 @@ const Home = ({ allCountries }) => {
                   : "text-veryDarkBlue bg-white"
               } ${
                 dropDownActive ? "flex" : "hidden"
-              } flex-col gap-3 absolute top-[54px] shadow-md rounded-sm w-full left-0 py-4 px-6 z-10`}
+              } flex-col absolute top-[54px] shadow-md rounded-sm w-full left-0 py-2 z-10`}
             >
               <button
-                className="text-start"
+                className="text-start px-6 py-2"
                 onClick={() => {
                   setDropDownFilter("All");
                 }}
@@ -132,7 +133,7 @@ const Home = ({ allCountries }) => {
                 All
               </button>
               <button
-                className="text-start"
+                className="text-start px-6 py-2"
                 onClick={() => {
                   setDropDownFilter("Africa");
                 }}
@@ -140,7 +141,7 @@ const Home = ({ allCountries }) => {
                 Africa
               </button>
               <button
-                className="text-start"
+                className="text-start px-6 py-2"
                 onClick={() => {
                   setDropDownFilter("Americas");
                 }}
@@ -148,7 +149,7 @@ const Home = ({ allCountries }) => {
                 Americas
               </button>
               <button
-                className="text-start"
+                className="text-start px-6 py-2"
                 onClick={() => {
                   setDropDownFilter("Asia");
                 }}
@@ -156,7 +157,7 @@ const Home = ({ allCountries }) => {
                 Asia
               </button>
               <button
-                className="text-start"
+                className="text-start px-6 py-2"
                 onClick={() => {
                   setDropDownFilter("Europe");
                 }}
@@ -164,7 +165,7 @@ const Home = ({ allCountries }) => {
                 Europe
               </button>
               <button
-                className="text-start"
+                className="text-start px-6 py-2"
                 onClick={() => {
                   setDropDownFilter("Oceania");
                 }}
@@ -174,70 +175,78 @@ const Home = ({ allCountries }) => {
             </div>
           </button>
         </div>
-
-        <div className="flex flex-col items-center sm:items-stretch sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {[
-            ...filteredCountries.slice(
-              (tab - 1) * ITEMS_PER_PAGE,
-              tab * ITEMS_PER_PAGE
-            ),
-          ].map((country, index) => {
-            return <Flag key={index} country={country} />;
-          })}
-        </div>
-
-        <div className="flex gap-2 mx-auto">
-          <Link
-            to={`?tab=${tab > 1 ? tab - 1 : tab}`}
+        {allCountries.length > 0 ? (
+          <div className="flex flex-col items-center sm:items-stretch sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {filteredCountries
+              .slice((tab - 1) * ITEMS_PER_PAGE, tab * ITEMS_PER_PAGE)
+              .map((country, index) => {
+                return <Flag key={index} country={country} />;
+              })}
+          </div>
+        ) : (
+          <div
             className={`${
-              darkTheme
-                ? "bg-darkBlue text-white"
-                : "bg-white shadow-lg text-veryDarkBlue"
-            } h-12 w-12 rounded-sm hover:bg-opacity-70 grid place-items-center`}
+              darkTheme ? "text-white" : "text-veryDarkBlue"
+            } text-3xl text-center w-full`}
           >
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </Link>
+            Loading
+          </div>
+        )}
 
-          {new Array(5).fill(0).map((_, index) => {
-            const totalTabs = Math.ceil(
-              filteredCountries.length / ITEMS_PER_PAGE
-            );
+        {allCountries.length > 0 && (
+          <div className="flex gap-2 mx-auto">
+            <Link
+              to={`?tab=${tab > 1 ? tab - 1 : tab}`}
+              className={`${
+                darkTheme
+                  ? "bg-darkBlue text-white"
+                  : "bg-white shadow-lg text-veryDarkBlue"
+              } h-12 w-12 rounded-sm hover:bg-opacity-70 grid place-items-center`}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </Link>
 
-            let tabNumber = tab + index - 2;
+            {new Array(5).fill(0).map((_, index) => {
+              const totalTabs = Math.ceil(
+                filteredCountries.length / ITEMS_PER_PAGE
+              );
 
-            if (tabNumber < index + 1) tabNumber = index + 1;
-            else if (tabNumber > totalTabs + index - 4)
-              tabNumber = totalTabs + index - 4;
+              let tabNumber = tab + index - 2;
 
-            return (
-              index < totalTabs && (
-                <Link
-                  to={`?tab=${tabNumber}`}
-                  className={`${
-                    darkTheme
-                      ? "bg-darkBlue text-white"
-                      : "bg-white shadow-lg text-veryDarkBlue"
-                  } h-12 w-12 rounded-sm hover:bg-opacity-70 text-lg font-bold grid place-items-center`}
-                >
-                  {tabNumber}
-                </Link>
-              )
-            );
-          })}
+              if (tabNumber < index + 1) tabNumber = index + 1;
+              else if (tabNumber > totalTabs + index - 4)
+                tabNumber = totalTabs + index - 4;
 
-          <Link
-            to={`?tab=${
-              tab * ITEMS_PER_PAGE <= filteredCountries.length ? tab + 1 : tab
-            }`}
-            className={`${
-              darkTheme
-                ? "bg-darkBlue text-white"
-                : "bg-white shadow-lg text-veryDarkBlue"
-            } h-12 w-12 rounded-sm hover:bg-opacity-70 grid place-items-center`}
-          >
-            <FontAwesomeIcon icon={faArrowRight} />
-          </Link>
-        </div>
+              return (
+                index < totalTabs && (
+                  <Link
+                    to={`?tab=${tabNumber}`}
+                    className={`${
+                      darkTheme
+                        ? "bg-darkBlue text-white"
+                        : "bg-white shadow-lg text-veryDarkBlue"
+                    } h-12 w-12 rounded-sm hover:bg-opacity-70 text-lg font-bold grid place-items-center`}
+                  >
+                    {tabNumber}
+                  </Link>
+                )
+              );
+            })}
+
+            <Link
+              to={`?tab=${
+                tab * ITEMS_PER_PAGE <= filteredCountries.length ? tab + 1 : tab
+              }`}
+              className={`${
+                darkTheme
+                  ? "bg-darkBlue text-white"
+                  : "bg-white shadow-lg text-veryDarkBlue"
+              } h-12 w-12 rounded-sm hover:bg-opacity-70 grid place-items-center`}
+            >
+              <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
