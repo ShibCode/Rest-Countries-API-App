@@ -225,6 +225,10 @@ const Home = ({ allCountries }) => {
                       darkTheme
                         ? "bg-darkBlue text-white"
                         : "bg-white shadow-lg text-veryDarkBlue"
+                    } ${
+                      tabNumber === tab &&
+                      "bg-white bg-opacity-20 hover:bg-opacity-20"
+                    }
                     } h-12 w-12 rounded-sm hover:bg-opacity-70 text-lg font-bold grid place-items-center`}
                   >
                     {tabNumber}
